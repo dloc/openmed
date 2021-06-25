@@ -13,17 +13,16 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=100, blank=True, default='')
 
 
-class Vitals(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    temperature = models.FloatField()
-    pulse = models.IntegerField()
-
-
 class Patient(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=True, default='')
     dob = models.DateField()
-    vitals = models.ForeignKey(Vitals, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.DO_NOTHING)
     notes = models.TextField()
+
+class Vitals(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    temperature = models.FloatField()
+    pulse = models.IntegerField()

@@ -12,13 +12,13 @@ class DoctorSerializer(serializers.ModelSerializer):
 class VitalsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vitals
-        fields = ['id', 'created', 'temperature', 'pulse']
+        fields = ['id', 'created', 'temperature', 'pulse', 'patient']
 
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ['id', 'first_name', 'last_name', 'dob', 'vitals', 'doctor', 'notes']
+        fields = ['id', 'first_name', 'last_name', 'dob', 'doctor', 'notes']
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
