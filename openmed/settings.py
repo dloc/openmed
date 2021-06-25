@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5&*5&cc1zjvx+9f6$08)$(ch8-)l1ogs7xg1&%9@wbgf@7+uk3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["y9no5kms4f.execute-api.us-east-1.amazonaws.com"]
 
@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'openmed',
         'USER': 'postgres',
-        'PASSWORD': os.getenv('DBPASS'),
+        'PASSWORD': 'b23ourne',
         'HOST': 'openmeddb.c62mbn5xvlnd.us-east-1.rds.amazonaws.com',
         'PORT': '5432'
     }
@@ -131,9 +131,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-USE_S3 = os.getenv('USE_S3') == 'TRUE'
-
 
 # aws settings
 AWS_ACCESS_KEY_ID = os.getenv('AWSKEY')

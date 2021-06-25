@@ -12,6 +12,9 @@ class Doctor(models.Model):
     first_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=True, default='')
 
+    def __str__(self) -> str:
+        return f'{self.last_name}, {self.first_name}'
+
 
 class Patient(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -20,6 +23,9 @@ class Patient(models.Model):
     dob = models.DateField()
     doctor = models.ForeignKey(Doctor, on_delete=models.DO_NOTHING)
     notes = models.TextField()
+
+    def __str__(self) -> str:
+        return f'{self.last_name}, {self.first_name}'
 
 class Vitals(models.Model):
     created = models.DateTimeField(auto_now_add=True)
