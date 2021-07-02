@@ -1,0 +1,73 @@
+# This code was created from tutorials found on the internet.
+
+from pulsetempsensor2 import *
+import time
+from spidev import SpiDev
+import requests
+from requests.structures import CaseInsensitiveDict
+import json
+#from uploadvitalsdef import *
+
+
+p = Pulsesensor()
+p.startAsyncBPM()
+#vitals = UPLDVTLS()
+
+# Open SPI bus
+spi = SpiDev()
+spi.open(0,0)
+spi.max_speed_hz=1000000
+
+def ReadChannel(channel):
+  adc = spi.xfer2([1,(8+channel)<<4,0])
+  data = ((adc[1]&3) << 8) + adc[2]
+  return data
+
+def ConvertVolts(data,places):
+  volts = (data * 3.3) / float(1023)
+  volts = round(volts,places)
+  return volts
+
+def ConvertTemp(data,places):
+  temp = ((data * 330)/float(1023))
+  temp = round(temp,places)
+  return temp
+ 
+temp_channel  = 1 
+
+
+try:
+    while True:
+        temp_level = ReadChannel(temp_channel)
+        temp_volts = ConvertVolts(temp_level,2)
+        temp       = ConvertTemp(temp_level,2)
+        tempf = ((temp * 1.8)+32)
+        print("Temp : {} ({}V) {} deg C {} deg F".format(temp_level,temp_volts,temp,tempf))
+        bpm = p.BPM
+        if bpm > 0:
+            print("BPM: %d" % bpm)
+            break
+        else:
+            print("No Heartbeat found")
+        time.sleep(1)
+    print("I have exited the loop",bpm,tempf)
+    ROOT_URL = "https://y9no5kms4f.execute-api.us-east-1.amazonaws.com/dev"
+    VITAL_URL = ROOT_URL + "/vitals/"
+
+
+    headers = CaseInsensitiveDict()
+    headers["Content-Type"] = "application/json"
+    headers["Authorization"] = "Basic ZHBhcmhhbUBteS5mYXUuZWR1OkNPVDY5MzBw"
+
+    data = {"temperature": tempf  , "pulse": int(bpm) , "patient":"3"}
+
+
+    resp = requests.post(VITAL_URL, headers=headers, data=json.dumps(data))
+
+    print(resp.status_code)
+    print(resp.content)
+
+
+except:
+     p.stopAsyncBPM()
+
